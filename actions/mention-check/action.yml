@@ -22,4 +22,4 @@ runs:
       run : node ./actions/mention-check/mention-check.js 
       shell : bash 
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        GITHUB_TOKEN: ${{ GITHUB_TOKEN }} 
