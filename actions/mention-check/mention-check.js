@@ -5,11 +5,11 @@ async function run() {
 
     console.log(process.env.GITHUB_TOKEN);
 
-    const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN");
-    console.log(GITHUB_TOKEN);
+    // const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN");
+    // console.log(GITHUB_TOKEN);
 
 
-    const octokit = github.getOctokit(GITHUB_TOKEN);
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
     console.log(octokit);
 
     const pullReq = context.payload.pull_request;
