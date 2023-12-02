@@ -15,4 +15,4 @@ we are going to use github actions toolkit
 - [ ] Implement feature XYZ
 
 ### Dependencies
-- [ ] Mentioned PR: #123 (Link to the PR in RepoA)
+- [ ] Mentioned PR: #PR_NUMBER (LinkToPRepoA)

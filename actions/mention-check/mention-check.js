@@ -6,27 +6,32 @@ async function run() {
 
 
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+    const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 
     const repository = 'thomasStbr/notify-mentioned-PR';
 
-    // List closed pull requests
-    octokit.pulls.list({
-        owner: repository.split('/')[0],
-        repo: repository.split('/')[1],
-        state: 'closed'
-    })
-        .then(response => {
-            const closedPullRequests = response.data;
-            closedPullRequests.forEach(pullRequest => {
-                console.log(`Pull Request #${pullRequest.number}: ${pullRequest.title}`);
-            });
-        })
-        .catch(error => {
-            console.error('Error listing pull requests:', error.message);
-        });
+    listRemotePR(octokit, "thomasStbr", "notify-mentioned-PR");
 
+    listRemotePR(octokit, owner, repo, false);
 
 }
+async function listRemotePR(octokit, repoOwner, repoName, closed = true) {
+
+    // List closed pull requests
+    const { data: pullRequests } = await octokit.pulls.list({
+        owner: repoOwner,
+        repo: repoName,
+        state: closed ? 'closed' : 'open',
+    });
+
+    pullRequests.forEach((pr) => {
+        console.log(`PR #${pr.number}: ${pr.title}`);
+        console.log(`  Description: ${pr.body}`);
+        console.log('---');
+    });
+}
+
+
 
 run().catch(error => {
     console.error(error);
