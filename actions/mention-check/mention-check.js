@@ -13,14 +13,14 @@ async function run() {
 
     const openPullRequests = await listRemotePR(octokit, owner, repo, false);
 
-    openPullRequests.forEach((pr) => {
+    openPullRequests.forEach(async (pr) => {
         const { mentionedPRNumber, mentionedPROwner, mentionedPRRepo } = extractMentionedPRInfo(pr.body);
 
         console.log(`Mentioned PR Number: ${mentionedPRNumber}`);
         console.log(`Mentioned PR Owner: ${mentionedPROwner}`);
         console.log(`Mentioned PR Repository: ${mentionedPRRepo}`);
-
-        console.log("PR is closed ? ", isPRClosed(octokit, mentionedPROwner, mentionedPRRepo, mentionedPRNumber));
+        const prIsClosed = await isPRClosed(octokit, mentionedPROwner, mentionedPRRepo, mentionedPRNumber);
+        console.log("PR is closed ? ", prIsClosed);
 
 
 
