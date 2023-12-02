@@ -3,13 +3,14 @@ const core = require('@actions/core');
 
 async function run() {
 
-
+    console.log(process.env.GITHUB_TOKEN);
 
     const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN");
     console.log(GITHUB_TOKEN);
+
+
     const octokit = github.getOctokit(GITHUB_TOKEN);
     console.log(octokit);
-    console.log(process.env.GITHUB_TOKEN);
 
     const pullReq = context.payload.pull_request;
     const pullRequestNumber = pullReq.number;
