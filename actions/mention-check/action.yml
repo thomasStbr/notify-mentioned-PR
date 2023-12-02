@@ -15,7 +15,7 @@ runs:
         node-version: 18
 
     - name: Install dependencies
-      run: npm install actions/mention-check 
+      run: npm install ./actions/mention-check 
       shell : bash 
     
     - name : Run mention Check
