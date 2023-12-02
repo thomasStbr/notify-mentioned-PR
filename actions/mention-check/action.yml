@@ -19,5 +19,5 @@ runs:
       shell : bash 
     
     - name : Run mention Check
-      run : node ./mention-check.js
+      run : node ./actions/mention-check/mention-check.js
       shell : bash 
