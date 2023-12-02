@@ -18,6 +18,8 @@ async function run() {
 
 
     //const mentionedPRNumber = mentionedPR[1];
+
+    console.log(octokit);
     const repoOwnerA = 'thomasStbr';
     const repoNameA = 'notify-mentioned-PR';
 
