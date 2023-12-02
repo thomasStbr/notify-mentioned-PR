@@ -11,7 +11,7 @@ async function run() {
     const repository = 'thomasStbr/notify-mentioned-PR';
 
 
-    const openPullRequests = listRemotePR(octokit, owner, repo, false);
+    const openPullRequests = await listRemotePR(octokit, owner, repo, false);
 
     openPullRequests.forEach((pr) => {
         const { mentionedPRNumber, mentionedPROwner, mentionedPRRepo } = extractMentionedPRInfo(pr.body);
