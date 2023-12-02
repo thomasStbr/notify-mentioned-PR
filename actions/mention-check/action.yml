@@ -19,5 +19,7 @@ runs:
       shell : bash 
     
     - name : Run mention Check
-      run : node ./actions/mention-check/mention-check.js
+      run : node ./actions/mention-check/mention-check.js 
       shell : bash 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
