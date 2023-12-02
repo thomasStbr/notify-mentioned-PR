@@ -1,48 +1,30 @@
 const github = require('@actions/github');
 const core = require('@actions/core');
+const { Octokit } = require('@octokit/rest');
 
 async function run() {
 
-    console.log(process.env.GITHUB_TOKEN);
 
-    // const GITHUB_TOKEN = core.getInput("GITHUB_TOKEN");
-    // console.log(GITHUB_TOKEN);
+    const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
+    const repository = 'thomasStbr/notify-mentioned-PR';
 
-    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+    // List closed pull requests
+    octokit.pulls.list({
+        owner: repository.split('/')[0],
+        repo: repository.split('/')[1],
+        state: 'closed'
+    })
+        .then(response => {
+            const closedPullRequests = response.data;
+            closedPullRequests.forEach(pullRequest => {
+                console.log(`Pull Request #${pullRequest.number}: ${pullRequest.title}`);
+            });
+        })
+        .catch(error => {
+            console.error('Error listing pull requests:', error.message);
+        });
 
-    // const pullReq = context.payload.pull_request;
-    // const pullRequestNumber = pullReq.number;
-
-    // console.log(pullReq);
-
-
-    //const mentionedPRNumber = mentionedPR[1];
-
-    console.log(octokit);
-    const repoOwnerA = 'thomasStbr';
-    const repoNameA = 'notify-mentioned-PR';
-
-
-    const { data: pullRequestA } = await octokit.pulls.get({
-        owner: repoOwnerA,
-        repo: repoNameA,
-        //pull_number: mentionedPRNumber,
-    });
-
-    console.log(pullRequestA);
-
-
-    // const { data: pullRequest } = await octokit.rest.pulls.get({
-    //     owner: context.repo.owner,
-    //     repo: context.repo.repo,
-    //     pull_number: pullRequestNumber,
-    //     mediaType: {
-    //         format: 'diff',
-    //     },
-    // });
-
-    // console.log(pullRequest);
 
 }
 
