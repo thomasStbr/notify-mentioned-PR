@@ -19,11 +19,11 @@ async function run() {
         const prToCheck = await extractMentionedPRInfo(pr.body);
 
         console.log("------------------------------------------------------");
-        pullRequests.forEach((pr) => {
-            console.log(`PR #${pr.number}: ${pr.title}`);
-            console.log(`  Description: ${pr.body}`);
-            console.log('---');
-        });
+
+        console.log(`PR #${pr.number}: ${pr.title}`);
+        console.log(`  Description: ${pr.body}`);
+        console.log('---');
+
 
         prToCheck.forEach(async ({ mentionedPRNumber, mentionedPROwner, mentionedPRRepo }) => {
             console.log(`Mentioned PR Number: ${mentionedPRNumber}`);
