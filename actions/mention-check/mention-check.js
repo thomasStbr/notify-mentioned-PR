@@ -1,10 +1,8 @@
-const { getInput, setFailed } = require('@actions/core');
-const { context, getOctokit } = require('@actions/github');
+const github = require('@actions/github');
 
 async function run() {
     try {
-        const myToken = getInput('GITHUB_TOKEN');
-        const octokit = getOctokit(myToken);
+        const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
         const pullRequestNumber = context.payload.pull_request.number;
 
