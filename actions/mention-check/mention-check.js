@@ -10,24 +10,37 @@ async function run() {
 
 
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-    console.log(octokit);
 
-    const pullReq = context.payload.pull_request;
-    const pullRequestNumber = pullReq.number;
+    // const pullReq = context.payload.pull_request;
+    // const pullRequestNumber = pullReq.number;
 
-    console.log(pullReq);
+    // console.log(pullReq);
 
 
-    const { data: pullRequest } = await octokit.rest.pulls.get({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        pull_number: pullRequestNumber,
-        mediaType: {
-            format: 'diff',
-        },
+    //const mentionedPRNumber = mentionedPR[1];
+    const repoOwnerA = 'thomasStbr';
+    const repoNameA = 'notify-mentioned-PR';
+
+
+    const { data: pullRequestA } = await octokit.pulls.get({
+        owner: repoOwnerA,
+        repo: repoNameA,
+        //pull_number: mentionedPRNumber,
     });
 
-    console.log(pullRequest);
+    console.log(pullRequestA);
+
+
+    // const { data: pullRequest } = await octokit.rest.pulls.get({
+    //     owner: context.repo.owner,
+    //     repo: context.repo.repo,
+    //     pull_number: pullRequestNumber,
+    //     mediaType: {
+    //         format: 'diff',
+    //     },
+    // });
+
+    // console.log(pullRequest);
 
 }
 
