@@ -22,10 +22,16 @@ async function run() {
         const prIsClosed = await isPRClosed(octokit, mentionedPROwner, mentionedPRRepo, mentionedPRNumber);
         console.log("PR is closed ? ", prIsClosed);
 
+        if (prIsClosed) {
+            checkMentionedPRCheckbox(octokit, owner, repo, pr.number, mentionedPRNumber, mentionedPROwner, mentionedPRRepo);
+        }
+
 
 
     });
 
+
+    console.log("END");
 
 
     //listRemotePR(octokit, "thomasStbr", "notify-mentioned-PR");
@@ -53,16 +59,38 @@ async function listRemotePR(octokit, repoOwner, repoName, closed = true) {
     return pullRequests;
 }
 
+async function checkMentionedPRCheckbox(octokit, repoOwner, repoName, localPRNumber, mentionedPRNumber, mentionedRepoOwner, mentionedRepoName) {
+    try {
+        const { data: currentPR } = await octokit.pulls.get({
+            owner: repoOwner,
+            repo: repoName,
+            pull_number: localPRNumber,
+        });
+
+        const checkboxText = `Mentioned PR: #${mentionedPRNumber} (https://github.com/${mentionedRepoOwner}/${mentionedRepoName})`;
+
+        const updatedBody = currentPR.body.replace(`- [ ] ${checkboxText}`, `- [x] ${checkboxText}`);
+        await octokit.pulls.update({
+            owner: repoOwner,
+            repo: repoName,
+            pull_number: localPRNumber,
+            body: updatedBody,
+        });
+    } catch (error) {
+        console.error(`Error updating local PR #${localPRNumber}:`, error.message);
+        throw error;
+    }
+}
+
+
 async function isPRClosed(octokit, repoOwner, repoName, prNumber) {
     try {
-        // Get information about the specific pull request
         const { data: pullRequest } = await octokit.pulls.get({
             owner: repoOwner,
             repo: repoName,
             pull_number: prNumber,
         });
 
-        // Check if the pull request state is "closed"
         return pullRequest.state === 'closed';
     } catch (error) {
         console.error(`Error checking the state of PR #${prNumber}:`, error.message);
