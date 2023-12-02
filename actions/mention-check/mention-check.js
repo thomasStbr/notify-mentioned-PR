@@ -13,18 +13,24 @@ async function run() {
 
     const openPullRequests = await listRemotePR(octokit, owner, repo, false);
 
+
     openPullRequests.forEach(async (pr) => {
-        const { mentionedPRNumber, mentionedPROwner, mentionedPRRepo } = extractMentionedPRInfo(pr.body);
 
-        console.log(`Mentioned PR Number: ${mentionedPRNumber}`);
-        console.log(`Mentioned PR Owner: ${mentionedPROwner}`);
-        console.log(`Mentioned PR Repository: ${mentionedPRRepo}`);
-        const prIsClosed = await isPRClosed(octokit, mentionedPROwner, mentionedPRRepo, mentionedPRNumber);
-        console.log("PR is closed ? ", prIsClosed);
+        const prToCheck = await extractMentionedPRInfo(pr.body);
 
-        if (prIsClosed) {
-            checkMentionedPRCheckbox(octokit, owner, repo, pr.number, mentionedPRNumber, mentionedPROwner, mentionedPRRepo);
-        }
+        prToCheck.forEach(async ({ mentionedPRNumber, mentionedPROwner, mentionedPRRepo }) => {
+            console.log(`Mentioned PR Number: ${mentionedPRNumber}`);
+            console.log(`Mentioned PR Owner: ${mentionedPROwner}`);
+            console.log(`Mentioned PR Repository: ${mentionedPRRepo}`);
+            const prIsClosed = await isPRClosed(octokit, mentionedPROwner, mentionedPRRepo, mentionedPRNumber);
+            console.log("PR is closed ? ", prIsClosed);
+
+            if (prIsClosed) {
+                checkMentionedPRCheckbox(octokit, owner, repo, pr.number, mentionedPRNumber, mentionedPROwner, mentionedPRRepo);
+            }
+
+        });
+
 
 
 
@@ -101,18 +107,18 @@ async function isPRClosed(octokit, repoOwner, repoName, prNumber) {
 
 function extractMentionedPRInfo(body) {
     // Regular expression to match the mentioned PR information
-    const regex = /Mentioned PR: #(\d+) \((https:\/\/github\.com\/([^\/]+)\/([^\/]+))\)/;
-    const match = body.match(regex);
+    const regex = /Mentioned PR: #(\d+) \((https:\/\/github\.com\/([^\/]+)\/([^\/]+))\)/g;
+    const matches = [...body.matchAll(regex)];
 
-    if (match) {
+    const mentionedPRInfoArray = matches.map(match => {
         const mentionedPRNumber = match[1];
         const mentionedPROwner = match[3];
         const mentionedPRRepo = match[4];
 
         return { mentionedPRNumber, mentionedPROwner, mentionedPRRepo };
-    }
+    });
 
-    return {};
+    return mentionedPRInfoArray;
 }
 
 run().catch(error => {
