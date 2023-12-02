@@ -1,24 +1,22 @@
 const github = require('@actions/github');
 
 async function run() {
-    try {
-        const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
-        const pullRequestNumber = context.payload.pull_request.number;
+    const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
-        const { data: pullRequest } = await octokit.rest.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: pullRequestNumber,
-            mediaType: {
-                format: 'diff',
-            },
-        });
+    const pullRequestNumber = context.payload.pull_request.number;
 
-        console.log(pullRequest);
-    } catch (error) {
-        setFailed(error.message);
-    }
+    const { data: pullRequest } = await octokit.rest.pulls.get({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        pull_number: pullRequestNumber,
+        mediaType: {
+            format: 'diff',
+        },
+    });
+
+    console.log(pullRequest);
+
 }
 
 run().catch(error => {
