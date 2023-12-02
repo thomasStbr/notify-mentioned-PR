@@ -1,21 +1,21 @@
-const github = require('@actions/github');
-const core = require('@actions/core');
+
 const { Octokit } = require('@octokit/rest');
 
 async function run() {
 
-
+    //create octokit instance 
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 
-    const repository = 'thomasStbr/notify-mentioned-PR';
+    //const repository = 'thomasStbr/notify-mentioned-PR';
 
-
+    //get openPR ON my repo 
     const openPullRequests = await listRemotePR(octokit, owner, repo, false);
 
 
     openPullRequests.forEach(async (pr) => {
 
+        // get each lines that match - [ ] Mentioned PR: #PR_NUMBER (LinkToPRepoA)
         const prToCheck = await extractMentionedPRInfo(pr.body);
 
         prToCheck.forEach(async ({ mentionedPRNumber, mentionedPROwner, mentionedPRRepo }) => {
@@ -26,6 +26,7 @@ async function run() {
             console.log("PR is closed ? ", prIsClosed);
 
             if (prIsClosed) {
+                console.log("Checking up the box");
                 checkMentionedPRCheckbox(octokit, owner, repo, pr.number, mentionedPRNumber, mentionedPROwner, mentionedPRRepo);
             }
 
@@ -36,11 +37,6 @@ async function run() {
 
     });
 
-
-    console.log("END");
-
-
-    //listRemotePR(octokit, "thomasStbr", "notify-mentioned-PR");
 
 
 
@@ -126,4 +122,4 @@ run().catch(error => {
     process.exit(1);
 });
 
-console.log('Hello mention');
+

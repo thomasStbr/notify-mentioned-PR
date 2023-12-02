@@ -17,4 +17,5 @@ jobs:
       - name: Run Mention Check
         uses : ./actions/mention-check 
         with : 
-          GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_REPOSITORY : ${{github.repository}}

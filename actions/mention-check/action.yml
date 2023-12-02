@@ -4,6 +4,9 @@ inputs:
   GITHUB_TOKEN :
     description : 'Github Token'
     required : True 
+  GITHUB_REPOSITORY : 
+    description : "Github repo varialbe"
+    required : True 
   
 
 runs: 
@@ -23,4 +26,4 @@ runs:
       shell : bash 
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }} 
-        GITHUB_REPOSITORY : ${{github.repository}}
+        GITHUB_REPOSITORY : ${{inputs.GITHUB_REPOSITORY}}
